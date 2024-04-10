@@ -57,7 +57,7 @@ pub type CRYPTO_EX_free = unsafe extern "C" fn(
     argp: *mut c_void,
 );
 
-#[cfg(ossl110)]
+#[cfg(any(ossl110, libressl390))]
 #[inline]
 #[track_caller]
 pub unsafe fn OPENSSL_malloc(num: usize) -> *mut c_void {
@@ -68,7 +68,7 @@ pub unsafe fn OPENSSL_malloc(num: usize) -> *mut c_void {
     )
 }
 
-#[cfg(not(ossl110))]
+#[cfg(not(any(ossl110, libressl390)))]
 #[inline]
 #[track_caller]
 pub unsafe fn OPENSSL_malloc(num: c_int) -> *mut c_void {
@@ -79,7 +79,7 @@ pub unsafe fn OPENSSL_malloc(num: c_int) -> *mut c_void {
     )
 }
 
-#[cfg(ossl110)]
+#[cfg(any(ossl110, libressl390))]
 #[inline]
 #[track_caller]
 pub unsafe fn OPENSSL_free(addr: *mut c_void) {
@@ -90,7 +90,7 @@ pub unsafe fn OPENSSL_free(addr: *mut c_void) {
     )
 }
 
-#[cfg(not(ossl110))]
+#[cfg(not(any(ossl110, libressl390)))]
 #[inline]
 pub unsafe fn OPENSSL_free(addr: *mut c_void) {
     CRYPTO_free(addr)
@@ -106,7 +106,7 @@ pub const CRYPTO_LOCK_SSL_CTX: c_int = 12;
 pub const CRYPTO_LOCK_SSL_SESSION: c_int = 14;
 
 cfg_if! {
-    if #[cfg(ossl110)] {
+    if #[cfg(any(ossl110, libressl381))] {
         pub const CRYPTO_EX_INDEX_SSL: c_int = 0;
         pub const CRYPTO_EX_INDEX_SSL_CTX: c_int = 1;
     } else if #[cfg(libressl)] {
